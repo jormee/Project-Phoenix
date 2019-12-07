@@ -11,6 +11,8 @@ Folajomi Shotunde - jormee  - folajor.mee@gmail.com - Full Stack
 
 Green-Okoroh lolia - LoliaStarGirl - lgreenokoroh@gmail.com
 
+Kalu Emeka Eme - Sam-Pheonix - kaluemeka38@gmail.com
+
 ### Project Category
 
 Education
