@@ -8,6 +8,7 @@ The app is created with the intention of helping teachers/tutors/instructors in 
 ### Team Members
 
 Folajomi Shotunde - jormee  - folajor.mee@gmail.com - Full Stack
+
 Green-Okoroh lolia - LoliaStarGirl - lgreenokoroh@gmail.com
 
 ### Project Category
