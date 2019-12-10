@@ -4,6 +4,7 @@ const axios = require("axios");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 
 const app = express();
 
@@ -19,8 +20,8 @@ mongoose
   .catch(err => {
     console.log(err);
   });
-// mongoose.set("useCreateIndex", true);
-// mongoose.set({ useUnifiedTopology: true });
+//  mongoose.set("useCreateIndex", true);
+//  mongoose.set({ useUnifiedTopology: true });
 
 //set up app middlewares
 app.use(bodyParser.json());
@@ -56,11 +57,10 @@ const studentSchema = new mongoose.Schema({
 });
 
 //teachers schema
-const teachersSchema = new mongoose.Schema({
+const teacherSchema = new mongoose.Schema({
   fullname: {
     type: String
   },
-
   username: {
     type: String,
     required: true,
@@ -80,10 +80,10 @@ const teachersSchema = new mongoose.Schema({
   }
 });
 
-const Students = new mongoose.model("Student", studentSchema);
-const Teacher = new mongoose.model("Teacher", teachersSchema);
+const Student = new mongoose.model("Student", studentSchema);
+const Teacher = new mongoose.model("Teacher", teacherSchema);
 
-const port = process.env.PORT || 3002;
+const port = process.env.PORT || 3003;
 
 app.get("/", (req, res) => {
   res.status(200).send("");
@@ -91,8 +91,69 @@ app.get("/", (req, res) => {
 app.post("/dashboard", (req, res) => {});
 
 app.post("/create-content", (req, res) => {});
-app.post("/signup", (req, res) => {});
-app.post("login", (req, res) => {});
+app.post("/signup", (req, res) => {
+    const{fullname,username,subject}= req.body;
+    bcrypt.hash(req.body.password,10,(err,hash)=>{
+      if(err){
+       return res.status(404).json({
+          err: err
+        })
+      }else{
+        const teacher = new Teacher({
+          fullname:fullname,
+          userrname:username,
+          subject:subject,
+          password:hash
+      })
+
+      teacher.save((err)=>{
+        if(err){
+          return res.status(400).json({
+            status:"failed",
+            message:"user counld no be save ",
+            err:err
+          })
+        }else{
+         return res.status(201).json({
+            status:"success",
+            username:req.body.username,
+            fullname: req.body.fullname,
+            subject:req.body.subject
+          })
+        }
+      })
+
+      }
+    })
+});
+app.post("/login", (req, res) => {
+  const {username,password} = req.body
+
+  teacher.find({username:username},(err,foundteacher)=>{
+    if(err){
+      return res.status(404).json({
+        status:"failed",
+        message:"could not find user",
+        err:err
+      })
+    }else{
+      if(foundteacher){
+        if(foundteacher.password===password){
+          return res.status(200).json({
+            fullname:foundteacher.fullname,
+            subject:foundteacher.subject,
+            username:foundteacher.username
+          })
+        }else{
+          return res.status(401).json({
+            status:"failed",
+            message:"incorrect password"
+          })
+        }
+      }
+    }
+  })
+});
 
 app.listen(port, () => {
   console.log("App started on " + port);
