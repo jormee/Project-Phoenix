@@ -1,0 +1,99 @@
+require("dotenv").config();
+const express = require("express");
+const axios = require("axios");
+const cors = require("cors");
+const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
+
+const app = express();
+
+//connect to atlas db
+mongoose
+  .connect(`${process.env.DB_URL}`, {
+    useUnifiedTopology: true,
+    useNewUrlParser: true
+  })
+  .then(() => {
+    console.log("db connection successful");
+  })
+  .catch(err => {
+    console.log(err);
+  });
+// mongoose.set("useCreateIndex", true);
+// mongoose.set({ useUnifiedTopology: true });
+
+//set up app middlewares
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
+
+//student schema
+const studentSchema = new mongoose.Schema({
+  studentfullname: {
+    type: String
+  },
+  studentClass: {
+    type: String
+  },
+  username: {
+    type: String,
+    required: true,
+    unique: true
+  },
+
+  pix: {
+    type: String
+  },
+
+  password: {
+    type: String,
+    required: true
+  },
+  date_registered: {
+    type: Date,
+    default: new Date()
+  }
+});
+
+//teachers schema
+const teachersSchema = new mongoose.Schema({
+  fullname: {
+    type: String
+  },
+
+  username: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  password: {
+    type: String,
+    required: true
+  },
+  subject: {
+    type: String,
+    required: true
+  },
+  date_registered: {
+    type: Date,
+    default: new Date()
+  }
+});
+
+const Students = new mongoose.model("Student", studentSchema);
+const Teacher = new mongoose.model("Teacher", teachersSchema);
+
+const port = process.env.PORT || 3002;
+
+app.get("/", (req, res) => {
+  res.status(200).send("");
+});
+app.post("/dashboard", (req, res) => {});
+
+app.post("/create-content", (req, res) => {});
+app.post("/signup", (req, res) => {});
+app.post("login", (req, res) => {});
+
+app.listen(port, () => {
+  console.log("App started on " + port);
+});
