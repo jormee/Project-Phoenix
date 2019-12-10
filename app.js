@@ -3,6 +3,7 @@ const express = require("express");
 const axios = require("axios");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
 
 const app = express();
 
@@ -13,7 +14,7 @@ mongoose
     useNewUrlParser: true
   })
   .then(() => {
-    console.log("db connection successfu");
+    console.log("db connection successful");
   })
   .catch(err => {
     console.log(err);
