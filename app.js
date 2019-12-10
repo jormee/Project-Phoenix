@@ -19,8 +19,8 @@ mongoose
   .catch(err => {
     console.log(err);
   });
-mongoose.set("useCreateIndex", true);
-mongoose.set({ useUnifiedTopology: true });
+// mongoose.set("useCreateIndex", true);
+// mongoose.set({ useUnifiedTopology: true });
 
 //set up app middlewares
 app.use(bodyParser.json());
@@ -56,7 +56,7 @@ const studentSchema = new mongoose.Schema({
 });
 
 //teachers schema
-const techersSchema = new mongoose.Schema({
+const teachersSchema = new mongoose.Schema({
   fullname: {
     type: String
   },
@@ -81,7 +81,7 @@ const techersSchema = new mongoose.Schema({
 });
 
 const Students = new mongoose.model("Student", studentSchema);
-const Teacher = new mongoose.model("Teacher", teacherSchema);
+const Teacher = new mongoose.model("Teacher", teachersSchema);
 
 const port = process.env.PORT || 3002;
 
