@@ -26,7 +26,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
-//owners schema
+//student schema
 const studentSchema = new mongoose.Schema({
   studentfullname: {
     type: String
@@ -53,6 +53,34 @@ const studentSchema = new mongoose.Schema({
     default: new Date()
   }
 });
+
+//teachers schema
+const techersSchema = new mongoose.Schema({
+  fullname: {
+    type: String
+  },
+
+  username: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  password: {
+    type: String,
+    required: true
+  },
+  subject: {
+    type: String,
+    required: true
+  },
+  date_registered: {
+    type: Date,
+    default: new Date()
+  }
+});
+
+const Students = new mongoose.model("Student", studentSchema);
+const Teacher = new mongoose.model("Teacher", teacherSchema);
 
 const port = process.env.PORT || 3002;
 
