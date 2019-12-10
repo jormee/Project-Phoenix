@@ -1,0 +1,110 @@
+.container {
+  width: 90%;
+  margin: 2rem auto 2rem;
+
+  .flexRow {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .services {
+    margin: 2rem auto;
+
+    .center {
+      text-align: center;
+      font-size: 2rem;
+      position: relative;
+      margin-bottom: 2rem;
+    }
+
+    .center::before {
+      content: '';
+      position: absolute;
+      background-color: #f00;
+      left: 50%;
+      top: 3rem;
+      transform: translateX(-50%);
+      width: 20%;  
+      height: .2rem;
+      border-radius: 3rem;
+    }
+  }
+
+  .contact {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    .contactHeader {
+      margin-bottom: 2rem;
+      font-size: 1.5rem;
+      position: relative;
+
+    }
+    .contactHeader::before {
+      content: '';
+      position: absolute;
+      background-color: #f00;
+      left: 0;
+      top: 3rem;
+      width: 4rem;  
+      height: .2rem;
+      border-radius: 3rem;
+    }
+
+    .emailForm {
+      margin-bottom: 2rem;
+      
+      .fieldset {
+        display: flex;
+        border: none;
+        justify-content: space-between;
+        align-items: center;
+  
+        textarea {
+          width: 20rem;
+          height: 20rem;
+        }
+      }
+    }
+  }
+}
+
+@media screen
+  and (min-width: 700px) {
+    .container {
+      width: 80%;
+
+      .flexRow {
+        flex-direction: row;
+        align-items: center;
+
+        .classImage {
+          max-width: 30%;
+          margin-right: 2rem;
+        }
+
+        .about {
+          max-width: 65%;
+        }
+      }
+
+      .services {
+        width: 40%;
+      }
+
+      .contact {
+        flex-direction: row;
+
+        .emailForm {
+          max-width: 50%;
+        }
+
+        .details {
+          width: 50%;
+        }
+      }
+    }
+
+  }
