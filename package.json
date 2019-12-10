@@ -2,7 +2,6 @@
   "name": "naijahacks-phoenix",
   "version": "1.0.0",
   "description": "Project Phoenix is a web application that is created to tackle one of the fundamental problems facing the education sector in Nigeria - Lack of access to quality resources.",
-
   "main": "app.js",
   "scripts": {
     "start": "node app.js"
@@ -14,10 +13,10 @@
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "mongoose": "^5.8.0"
+    "mongoose": "^5.8.0",
+    "uuid": "^3.3.3"
   },
   "devDependencies": {},
-
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jormee/naijahacks-phoenix.git"
@@ -28,4 +27,4 @@
     "url": "https://github.com/jormee/naijahacks-phoenix/issues"
   },
   "homepage": "https://github.com/jormee/naijahacks-phoenix#readme"
-
+}
