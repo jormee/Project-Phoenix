@@ -4,14 +4,15 @@ const axios = require("axios");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
+//const bcrypt = require("bcrypt");
 const uuid = require("uuid");
+const md5= require('md5')
 
 const app = express();
 
 //connect to atlas db
 mongoose
-  .connect(`${process.env.DB_URL}`, {
+  .connect(`mongodb+srv://chinedu:chinedu@pheonix-n9ifq.mongodb.net/test?retryWrites=true&w=majority`, {
     useUnifiedTopology: true,
     useNewUrlParser: true
   })
@@ -122,18 +123,18 @@ app.post("/create-content", (req, res) => {
 });
 
 app.post("/signup", (req, res) => {
-    const{fullname,username,subject}= req.body;
-    bcrypt.hash(req.body.password,10,(err,hash)=>{
-      if(err){
-       return res.status(404).json({
-          err: err
-        })
-      }else{
+    const{fullname,username,subject,password}= req.body;
+    //bcrypt.hash(req.body.password,10,(err,hash)=>{
+      // if(err){
+      //  return res.status(404).json({
+      //     err: err
+      //   })
+      // }else{
         const newTeacher = new Teacher({
           fullname:fullname,
           userrname:username,
           subject:subject,
-          password:hash
+          password:md5(password)
       })
       newTeacher.save((err)=>{
         if(err){
@@ -152,8 +153,8 @@ app.post("/signup", (req, res) => {
         }
       })
 
-      }
-    })
+      //}
+    //})
 });
 
 //login route
@@ -168,8 +169,8 @@ app.post("/login", (req, res) => {
       })
     }else{
       if(foundteacher){
-     bcrypt.compare(password, foundteacher.password, function(err, res2) {
-       if(res2===true){
+    //  bcrypt.compare(password, foundteacher.password, function(err, res2) {
+    //    if(res2===true){
         return res.status(200).json({
           fullname:foundteacher.fullname,
           subject:foundteacher.subject,
@@ -182,8 +183,8 @@ app.post("/login", (req, res) => {
           message:"incorrect password"
         })
        }
-       });
-      }
+       //});
+      //}
     }
   })
 });
