@@ -61,12 +61,26 @@
         border: none;
         justify-content: space-between;
         align-items: center;
-  
+
         textarea {
           width: 20rem;
           height: 20rem;
         }
       }
+
+      .button {
+        padding: .5rem 1rem;
+        margin: 2rem 0 2rem 0;
+        background-color: #f00;
+        color: white;
+        border: thin solid black;
+        border-radius: 1rem;
+      }
+    }
+
+    .iconify {
+      width: 3rem;
+      height: 3rem;
     }
   }
 }
