@@ -29,7 +29,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
-//student schema
+//note schema
 const noteSchema = new mongoose.Schema({
   teacherUsername: {
     type: String
@@ -41,7 +41,7 @@ const noteSchema = new mongoose.Schema({
   noteId: {
     type: String,
     required: true,
-    unique:true
+    unique: true
   },
   date_created: {
     type: Date,
@@ -83,109 +83,127 @@ app.get("/", (req, res) => {
 });
 app.post("/dashboard", (req, res) => {});
 
-app.get('/create-content',(req,res)=>{
+app.get("/create-content", (req, res) => {
   let content = req.body.content;
-  axios.get(`https://www.googleapis.com/books/v1/volumes?q=${content}&key=${process.env.GOOGLE_BOOK_KEY}`,{
-    method:"GET",
-    headers:{
-      "content-type":"application/json"
-    }
-  })
-  .then(res2=>{
-    return res.status(200).json({
-      data:res2
+  axios
+    .get(
+      `https://www.googleapis.com/books/v1/volumes?q=${content}&key=${process.env.GOOGLE_BOOK_KEY}`,
+      {
+        method: "GET",
+        headers: {
+          "content-type": "application/json"
+        }
+      }
+    )
+    .then(res2 => {
+      return res.status(200).json({
+        data: res2
+      });
     })
-  })
-  .catch(err=>{console.log(err)})
-})
+    .catch(err => {
+      console.log(err);
+    });
+});
 
 app.post("/create-content", (req, res) => {
-  const {note,teacherUsername,} =req.body,
-  const newNote = new Note({
-    note:note,
-    teacherUsername:teacherUsername,
-    noteId: uuid(),
-  })
-  newNote.save((err)=>{
-    if(err){
-     return res.status(404).json({
-        status:"failed",
-        message:"could not save note"
-      })
-    }else{
+  const { note, teacherUsername } = req.body,
+    newNote = new Note({
+      note: note,
+      teacherUsername: teacherUsername,
+      noteId: uuid()
+    });
+  newNote.save(err => {
+    if (err) {
+      return res.status(404).json({
+        status: "failed",
+        message: "could not save note"
+      });
+    } else {
       return res.status(201).json({
-        status:"success",
-        message:"Note created"
-      })
+        status: "success",
+        message: "Note created"
+      });
     }
-  })
+  });
 });
 
 app.post("/signup", (req, res) => {
-    const{fullname,username,subject}= req.body;
-    bcrypt.hash(req.body.password,10,(err,hash)=>{
-      if(err){
-       return res.status(404).json({
-          err: err
-        })
-      }else{
-        const newTeacher = new Teacher({
-          fullname:fullname,
-          userrname:username,
-          subject:subject,
-          password:hash
-      })
-      newTeacher.save((err)=>{
-        if(err){
+  const { fullname, username, subject } = req.body;
+  bcrypt.hash(req.body.password, 10, (err, hash) => {
+    if (err) {
+      return res.status(404).json({
+        err: err
+      });
+    } else {
+      const newTeacher = new Teacher({
+        fullname: fullname,
+        userrname: username,
+        subject: subject,
+        password: hash
+      });
+      newTeacher.save(err => {
+        if (err) {
           return res.status(400).json({
-            status:"failed",
-            message:"user counld no be save ",
-            err:err
-          })
-        }else{
-         return res.status(201).json({
-            status:"success",
-            username:req.body.username,
+            status: "failed",
+            message: "user counld no be save ",
+            err: err
+          });
+        } else {
+          return res.status(201).json({
+            status: "success",
+            username: req.body.username,
             fullname: req.body.fullname,
-            subject:req.body.subject
-          })
+            subject: req.body.subject
+          });
         }
-      })
-
-      }
-    })
+      });
+    }
+  });
 });
 
 //login route
 app.post("/login", (req, res) => {
-  const {username,password} = req.body
-  Teacher.findOne({username:username},(err,foundteacher)=>{
-    if(err){
+  const { username, password } = req.body;
+  Teacher.findOne({ username: username }, (err, foundteacher) => {
+    if (err) {
       return res.status(404).json({
-        status:"failed",
-        message:"could not find user",
-        err:err
-      })
-    }else{
-      if(foundteacher){
-     bcrypt.compare(password, foundteacher.password, function(err, res2) {
-       if(res2===true){
-        return res.status(200).json({
-          fullname:foundteacher.fullname,
-          subject:foundteacher.subject,
-          username:foundteacher.username
-        })
-
-       }else{
-        return res.status(401).json({
-          status:"failed",
-          message:"incorrect password"
-        })
-       }
-       });
+        status: "failed",
+        message: "could not find user",
+        err: err
+      });
+    } else {
+      if (foundteacher) {
+        bcrypt.compare(password, foundteacher.password, function(err, res2) {
+          if (res2 === true) {
+            Note.find({ teacherUsername: username }, (err, notes) => {
+              if (err) {
+                return res.status(404).json({
+                  message: "Sorry an error occurred while getting Notes",
+                  notes: [],
+                  fullname: foundteacher.fullname,
+                  subject: foundteacher.subject,
+                  username: foundteacher.username
+                });
+              } else {
+                return res.status(200).json({
+                  status: "success",
+                  notes: notes,
+                  fullname: foundteacher.fullname,
+                  subject: foundteacher.subject,
+                  username: foundteacher.username
+                });
+              }
+            });
+          } else {
+            return res.status(401).json({
+              status: "failed",
+              message: "incorrect password"
+            });
+          }
+        });
       }
     }
-  })
+  });
 });
 
 app.listen(port, () => {
