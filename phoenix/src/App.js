@@ -8,7 +8,7 @@ import AuthContextProvider from './contexts/authContext';
 const Nav = lazy(() => import('./components/nav/nav'))
 const Home = lazy(() => import('./components/home/home'));
 const Dashboard = lazy(() => import('./components/dashboard/dashboard'));
-const Lesson = lazy(() => import('./components/lesson'));
+const Lesson = lazy(() => import('./components/lesson/lesson'));
 
 function App() {
   return (
@@ -19,7 +19,7 @@ function App() {
             <Nav />
             <Route exact path='/' component={Home} />
             <Route path='/:user_id/dashboard' component={Dashboard} />
-            <Route path='/create-content' component={Lesson} />
+            <Route path='/create-lesson' component={Lesson} />
           </Suspense>
         </Switch>
       </SidenavContextProvider>

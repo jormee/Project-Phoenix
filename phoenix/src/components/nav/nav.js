@@ -1,9 +1,10 @@
 import React, { useContext } from 'react'
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
-import navStyles from './nav.module.scss';
 import { SidenavContext } from '../../contexts/sidenavContext';
 import { AuthContext } from '../../contexts/authContext';
+
+import './nav.scss';
 
 const Nav = () => {
 
@@ -11,14 +12,12 @@ const Nav = () => {
   const { isActive, toggleSidenav } = useContext(SidenavContext);
   
   return(
-    <nav className={navStyles.nav} data-state={isActive}>
-      <div className={navStyles.container}>
-        <h1 className={navStyles.navBrand}>Phoenix Classroom</h1>
-        <ul className={navStyles.navBar}>
-          <li className={navStyles.navItem}><Link to="/">Home</Link></li>
-          <li className={navStyles.navItem}><Link to="/create-lesson">Lessons</Link></li>
-          <li className={navStyles.navItem}><Link to="#services">What we do</Link></li>
-          <li className={navStyles.navItem}><Link to="#contact">Contacts</Link></li>
+    <nav className="nav" data-state={isActive}>
+      <div className="container">
+        <h1 className="navBrand">Phoenix Classroom</h1>
+        <ul className="navBar">
+          <li><NavLink to="/" className="navItem">Home</NavLink></li>
+          <li><NavLink to="/create-lesson" className="navItem">Lessons</NavLink></li>
           {
             isLoggedIn
             ? <h3>logged in</h3>
@@ -26,13 +25,9 @@ const Nav = () => {
           }
         </ul>
 
-        <button className={navStyles.sidenavToggle} onClick={toggleSidenav}>
         {
-          isActive
-          ? <span className="iconify" data-icon="bx:bx-x" data-inline="false"></span>
-          : <span className="iconify" data-icon="dashicons:menu-alt" data-inline="false" ></span>
+          isActive && <button>X</button>
         }
-        </button>
       </div>
     </nav>
   )
