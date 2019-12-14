@@ -41,7 +41,9 @@ const noteSchema = new mongoose.Schema({
   note: {
     type: String
   },
-
+  topic: {
+    type: String
+  },
   noteId: {
     type: String,
     required: true,
