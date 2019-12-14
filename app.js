@@ -35,11 +35,15 @@ app.use(cors());
 
 //note schema
 const noteSchema = new mongoose.Schema({
-  teacherUsername: {
+  teacherEmail: {
     type: String
   },
   note: {
     type: String
+  },
+  subject: {
+    type: String,
+    required: true
   },
   topic: {
     type: String
@@ -60,7 +64,7 @@ const teacherSchema = new mongoose.Schema({
   fullname: {
     type: String
   },
-  username: {
+  email: {
     type: String,
     required: true,
     unique: true
@@ -69,10 +73,7 @@ const teacherSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  subject: {
-    type: String,
-    required: true
-  },
+
   date_registered: {
     type: Date,
     default: new Date()
@@ -146,10 +147,12 @@ app.get("/create-content", (req, res) => {
 
 //tested and working
 app.post("/create-content", (req, res) => {
-  const { note, teacherUsername } = req.body,
+  const { note, email, subject, topic } = req.body,
     newNote = new Note({
       note: note,
-      teacherUsername: teacherUsername,
+      teacherEmail: email,
+      subjaect: subject,
+      topic: topic,
       noteId: uuid()
     });
   newNote.save(err => {
@@ -169,11 +172,10 @@ app.post("/create-content", (req, res) => {
 
 //tested and working
 app.post("/signup", (req, res) => {
-  const { fullname, username, subject, password } = req.body;
+  const { fullname, email, password } = req.body;
   const newTeacher = new Teacher({
     fullname: fullname,
-    username: username,
-    subject: subject,
+    email: email,
     password: md5(password)
   });
   newTeacher.save(err => {
@@ -186,7 +188,7 @@ app.post("/signup", (req, res) => {
     } else {
       return res.status(201).json({
         status: "success",
-        username: req.body.username,
+        email: req.body.email,
         fullname: req.body.fullname,
         subject: req.body.subject
       });
@@ -196,8 +198,8 @@ app.post("/signup", (req, res) => {
 
 //tested and working
 app.post("/login", (req, res) => {
-  const { username, password } = req.body;
-  Teacher.findOne({ username: username }, (err, foundteacher) => {
+  const { email, password } = req.body;
+  Teacher.findOne({ email: email }, (err, foundteacher) => {
     if (err) {
       return res.status(404).json({
         status: "failed",
@@ -210,8 +212,7 @@ app.post("/login", (req, res) => {
           return res.status(200).json({
             status: "success",
             fullname: foundteacher.fullname,
-            subject: foundteacher.subject,
-            username: foundteacher.username
+            email: foundteacher.email
           });
         } else {
           return res.status(401).json({
@@ -222,7 +223,7 @@ app.post("/login", (req, res) => {
       } else {
         return res.status(404).json({
           status: "failed",
-          message: "No teacher with the given username"
+          message: `No teacher with the given Email ${email}`
         });
       }
     }
