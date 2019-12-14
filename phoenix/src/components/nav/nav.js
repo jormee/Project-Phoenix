@@ -21,7 +21,7 @@ const Nav = () => {
           {
             isLoggedIn
             ? <h3>logged in</h3>
-            : <a href="#signin">Log In</a>
+            : <a href="/signin">Log In</a>
           }
         </ul>
 

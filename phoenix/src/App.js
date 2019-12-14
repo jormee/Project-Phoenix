@@ -5,6 +5,9 @@ import './App.css';
 import SidenavContextProvider from './contexts/sidenavContext';
 import AuthContextProvider from './contexts/authContext';
 
+import SignUp from './components/auth/signup';
+import SignIn from './components/auth/signin';
+
 const Nav = lazy(() => import('./components/nav/nav'))
 const Home = lazy(() => import('./components/home/home'));
 const Dashboard = lazy(() => import('./components/dashboard/dashboard'));
@@ -20,6 +23,8 @@ function App() {
             <Route exact path='/' component={Home} />
             <Route path='/:user_id/dashboard' component={Dashboard} />
             <Route path='/create-lesson' component={Lesson} />
+            <Route path='/login' component={SignIn} />
+            <Route path='/signup' component={SignUp} />
           </Suspense>
         </Switch>
       </SidenavContextProvider>
