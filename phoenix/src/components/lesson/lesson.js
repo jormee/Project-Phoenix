@@ -7,7 +7,7 @@ const Lesson = () => {
       <div className="form">
         <h3>Create Your Lesson</h3>
         <select>
-          <option disabled>Select your subject</option>
+          <option>Select your subject</option>
           <option value="Mathematics">Mathematics</option>
           <option value="agricultural science">Agricultural Science</option>
           <option value="basic science">Basic Science</option>
@@ -17,6 +17,7 @@ const Lesson = () => {
           <option value="phe">Physical and Health Education</option>
         </select>
         <select>
+          <option>Select your topic</option>
           <option value="Mathematics">Introduction to basic science</option>
           <option value="agricultural science">L</option>
           <option value="basic science">Basic Science</option>
