@@ -4,18 +4,21 @@ const axios = require("axios");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-//const bcrypt = require("bcrypt");
+
 const uuid = require("uuid");
-const md5= require('md5')
+const md5 = require("md5");
 
 const app = express();
 
 //connect to atlas db
 mongoose
-  .connect(`mongodb+srv://chinedu:chinedu@pheonix-n9ifq.mongodb.net/test?retryWrites=true&w=majority`, {
-    useUnifiedTopology: true,
-    useNewUrlParser: true
-  })
+  .connect(
+    `mongodb+srv://chinedu:chinedu@pheonix-n9ifq.mongodb.net/test?retryWrites=true&w=majority`,
+    {
+      useUnifiedTopology: true,
+      useNewUrlParser: true
+    }
+  )
   .then(() => {
     console.log("db connection successful");
   })
@@ -79,10 +82,38 @@ const Teacher = new mongoose.model("Teacher", teacherSchema);
 
 const port = process.env.PORT || 3003;
 
-app.get("/", (req, res) => {
-  res.status(200).send("");
+//texted and working
+app.get("/teachers", (req, res) => {
+  Teacher.find({}, (err, teachers) => {
+    if (err) {
+      return res.status(404).json({
+        status: "failed",
+        err: err
+      });
+    }
+    return res.status(200).json({
+      status: "success",
+      data: teachers
+    });
+  });
 });
-app.post("/dashboard", (req, res) => {});
+
+//tested and working
+app.get("/notes", (req, res) => {
+  Note.find({}, (err, notes) => {
+    if (err) {
+      return res.status(404).json({
+        status: "failed",
+        message: "something went wrong",
+        err: err
+      });
+    }
+    return res.status(200).json({
+      status: "success",
+      notes: notes
+    });
+  });
+});
 
 app.get("/create-content", (req, res) => {
   let content = req.body.content;
@@ -106,6 +137,7 @@ app.get("/create-content", (req, res) => {
     });
 });
 
+//tested and working
 app.post("/create-content", (req, res) => {
   const { note, teacherUsername } = req.body,
     newNote = new Note({
@@ -128,131 +160,64 @@ app.post("/create-content", (req, res) => {
   });
 });
 
+//tested and working
 app.post("/signup", (req, res) => {
-<<<<<<< HEAD
-  const { fullname, username, subject } = req.body;
-  bcrypt.hash(req.body.password, 10, (err, hash) => {
+  const { fullname, username, subject, password } = req.body;
+  const newTeacher = new Teacher({
+    fullname: fullname,
+    username: username,
+    subject: subject,
+    password: md5(password)
+  });
+  newTeacher.save(err => {
     if (err) {
-      return res.status(404).json({
+      return res.status(400).json({
+        status: "failed",
+        message: "Teacher counld no be save ",
         err: err
       });
     } else {
-      const newTeacher = new Teacher({
-        fullname: fullname,
-        userrname: username,
-        subject: subject,
-        password: hash
-      });
-      newTeacher.save(err => {
-        if (err) {
-=======
-    const{fullname,username,subject,password}= req.body;
-    //bcrypt.hash(req.body.password,10,(err,hash)=>{
-      // if(err){
-      //  return res.status(404).json({
-      //     err: err
-      //   })
-      // }else{
-        const newTeacher = new Teacher({
-          fullname:fullname,
-          userrname:username,
-          subject:subject,
-          password:md5(password)
-      })
-      newTeacher.save((err)=>{
-        if(err){
->>>>>>> 5b3136d37f1b019c9762a4aa18cdb0c3f825f14e
-          return res.status(400).json({
-            status: "failed",
-            message: "user counld no be save ",
-            err: err
-          });
-        } else {
-          return res.status(201).json({
-            status: "success",
-            username: req.body.username,
-            fullname: req.body.fullname,
-            subject: req.body.subject
-          });
-        }
-<<<<<<< HEAD
+      return res.status(201).json({
+        status: "success",
+        username: req.body.username,
+        fullname: req.body.fullname,
+        subject: req.body.subject
       });
     }
   });
-=======
-      })
-
-      //}
-    //})
->>>>>>> 5b3136d37f1b019c9762a4aa18cdb0c3f825f14e
 });
 
-//login route
+//tested and working
 app.post("/login", (req, res) => {
   const { username, password } = req.body;
   Teacher.findOne({ username: username }, (err, foundteacher) => {
     if (err) {
       return res.status(404).json({
-<<<<<<< HEAD
         status: "failed",
-        message: "could not find user",
+        message: "Could not find teacher",
         err: err
       });
     } else {
       if (foundteacher) {
-        bcrypt.compare(password, foundteacher.password, function(err, res2) {
-          if (res2 === true) {
-            Note.find({ teacherUsername: username }, (err, notes) => {
-              if (err) {
-                return res.status(404).json({
-                  message: "Sorry an error occurred while getting Notes",
-                  notes: [],
-                  fullname: foundteacher.fullname,
-                  subject: foundteacher.subject,
-                  username: foundteacher.username
-                });
-              } else {
-                return res.status(200).json({
-                  status: "success",
-                  notes: notes,
-                  fullname: foundteacher.fullname,
-                  subject: foundteacher.subject,
-                  username: foundteacher.username
-                });
-              }
-            });
-          } else {
-            return res.status(401).json({
-              status: "failed",
-              message: "incorrect password"
-            });
-          }
+        if (foundteacher.password == md5(password)) {
+          return res.status(200).json({
+            status: "success",
+            fullname: foundteacher.fullname,
+            subject: foundteacher.subject,
+            username: foundteacher.username
+          });
+        } else {
+          return res.status(401).json({
+            status: "failed",
+            message: "incorrect password"
+          });
+        }
+      } else {
+        return res.status(404).json({
+          status: "failed",
+          message: "No teacher with the given username"
         });
       }
-=======
-        status:"failed",
-        message:"could not find user",
-        err:err
-      })
-    }else{
-      if(foundteacher){
-    //  bcrypt.compare(password, foundteacher.password, function(err, res2) {
-    //    if(res2===true){
-        return res.status(200).json({
-          fullname:foundteacher.fullname,
-          subject:foundteacher.subject,
-          username:foundteacher.username
-        })
-
-       }else{
-        return res.status(401).json({
-          status:"failed",
-          message:"incorrect password"
-        })
-       }
-       //});
-      //}
->>>>>>> 5b3136d37f1b019c9762a4aa18cdb0c3f825f14e
     }
   });
 });
