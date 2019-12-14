@@ -3,9 +3,11 @@ import { Link } from 'react-router-dom';
 
 import navStyles from './nav.module.scss';
 import { SidenavContext } from '../../contexts/sidenavContext';
+import { AuthContext } from '../../contexts/authContext';
 
 const Nav = () => {
 
+  const { isLoggedIn } = useContext(AuthContext);
   const { isActive, toggleSidenav } = useContext(SidenavContext);
   
   return(
@@ -17,8 +19,11 @@ const Nav = () => {
           <li className={navStyles.navItem}><Link to="/create-lesson">Lessons</Link></li>
           <li className={navStyles.navItem}><Link to="#services">What we do</Link></li>
           <li className={navStyles.navItem}><Link to="#contact">Contacts</Link></li>
-          {/* login/signup/avatar */}
-          {/* <li className={navStyles.navItem}><Link to=""></Link></li> */}
+          {
+            isLoggedIn
+            ? <h3>logged in</h3>
+            : <a href="#signin">Log In</a>
+          }
         </ul>
 
         <button className={navStyles.sidenavToggle} onClick={toggleSidenav}>

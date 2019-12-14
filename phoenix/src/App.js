@@ -3,24 +3,27 @@ import { Switch, Route } from 'react-router-dom';
 
 import './App.css';
 import SidenavContextProvider from './contexts/sidenavContext';
+import AuthContextProvider from './contexts/authContext';
 
 const Nav = lazy(() => import('./components/nav/nav'))
 const Home = lazy(() => import('./components/home/home'));
-const Dashboard = lazy(() => import('./components/dashboard'));
+const Dashboard = lazy(() => import('./components/dashboard/dashboard'));
 const Lesson = lazy(() => import('./components/lesson'));
 
 function App() {
   return (
-    <SidenavContextProvider>
-      <Switch>
-        <Suspense fallback={<h3>Please wait...</h3>}>
-          <Nav />
-          <Route exact path='/' component={Home} />
-          <Route path='/:user_id/dashboard' component={Dashboard} />
-          <Route path='/create-content' component={Lesson} />
-        </Suspense>
-      </Switch>
-    </SidenavContextProvider>
+    <AuthContextProvider>
+      <SidenavContextProvider>
+        <Switch>
+          <Suspense fallback={<h3>Please wait...</h3>}>
+            <Nav />
+            <Route exact path='/' component={Home} />
+            <Route path='/:user_id/dashboard' component={Dashboard} />
+            <Route path='/create-content' component={Lesson} />
+          </Suspense>
+        </Switch>
+      </SidenavContextProvider>
+    </AuthContextProvider>
   );
 }
 
