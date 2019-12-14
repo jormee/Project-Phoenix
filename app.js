@@ -83,6 +83,11 @@ const Teacher = new mongoose.model("Teacher", teacherSchema);
 const port = process.env.PORT || 3003;
 
 //texted and working
+app.get("/", (req, res) => {
+  res.send(
+    "welcome to naijahacks-phoenix- classroom API use  following routes to consume (GET /teachers, GET /notes, POST /create-content, POST /signup, POST /login)"
+  );
+});
 app.get("/teachers", (req, res) => {
   Teacher.find({}, (err, teachers) => {
     if (err) {
